@@ -1,19 +1,14 @@
 const request = require("request");
 const cheerio = require("cheerio");
 const fs = require("fs");
+const priceService = require("./PriceService");
 
-function startPoint() {
+(function startToCraw() {
   request(
-    {
-      headers: {
-        "user-agent":
-          "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/72.0.3626.109 Safari/537.36"
-      },
-      url: "https://goodinfo.tw/StockInfo/StockDetail.asp?STOCK_ID=1560", // 中央氣象局網頁
-      method: "GET"
-    },
+    priceService.getRequestParameter(),
     function(error, response, body) {
       if (error || !body) {
+        console.log("some error happen: " + error);
         return;
       }
       const $ = cheerio.load(body); // 載入 body
@@ -44,6 +39,5 @@ function startPoint() {
       fs.writeFileSync("result.json", JSON.stringify(result));
     }
   );
-}
+})();
 
-startPoint();
